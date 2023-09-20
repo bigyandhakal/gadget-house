@@ -3,4 +3,9 @@ const validateEmail = (email) => {
   return re.test(email);
 };
 
-module.exports = {validateEmail}
+const validatePassword = (password)=>{
+  var re = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$/;
+  return re.test(password)
+}
+
+module.exports = {validateEmail, validatePassword}
