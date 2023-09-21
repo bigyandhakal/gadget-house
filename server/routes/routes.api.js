@@ -1,11 +1,13 @@
 const router = require("express").Router();
-const userRouter = require("../modules/users/user.api")
-
-router.use("/users", userRouter)
+const userRouter = require("../modules/users/user.route")
+const authRouter = require("../modules/auth/auth.route")
 
 router.get("/", ({ req, res, next }) => {
   res.json({ data: "", msg: "API working" });
 });
+
+router.use("/auth", authRouter)
+router.use("/users", userRouter)
 
 router.all("*", ({ req, res, next }) => {
   try {

@@ -12,14 +12,12 @@ const userSchema = new Schema({
     required: true,
     validate: [validateEmail, "Please fill a valid email address"],
   },
+  isEmailVerified: {type: Boolean, default:false},
   password: {
     type: String,
     required: true,
-    // validate: [
-    //   validatePassword,
-    //   "Password must contain at least one number, uppercase, lowercase and at least 8 or more characters",
-    // ],
   },
+  isActive: {type: Boolean, default:true},
   ...commonSchema,
 });
 
