@@ -4,6 +4,7 @@ const userModel = require("../users/user.model");
 const authModel = require("./auth.model");
 const { generateOTP, verifyOTP } = require("../../utils/otp");
 const { mailer } = require("../../services/mail");
+const { generateJWT } = require("../../utils/jwt");
 
 const create = async (payload) => {
   const { password, ...rest } = payload;
@@ -30,7 +31,10 @@ const login = async (email, password) => {
   if (!user.isEmailVerified) throw new Error("Email not verified.");
   const isValid = await bcrypt.compare(password, user.password);
   if (!isValid) throw new Error("Email or password invalid");
-  return true;
+  // JWT token generate
+  const payload = {email: user?.email, roles: user?.roles ?? []};
+  const token = generateJWT(payload)
+  return {token};
 };
 
 const verifyEmail = async (emailP, tokenP) => {
