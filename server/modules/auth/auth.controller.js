@@ -7,7 +7,7 @@ const { mailer } = require("../../services/mail");
 const { generateJWT } = require("../../utils/jwt");
 
 const create = async (payload) => {
-  const { password, ...rest } = payload;
+  const { password, roles, ...rest } = payload;
   if (
     password.length < 8 ||
     !/[a-z]/.test(password) ||
@@ -25,7 +25,7 @@ const create = async (payload) => {
 };
 
 const login = async (email, password) => {
-  const user = await userModel.findOne({ email });
+  const user = await userModel.findOne({ email }).select("+password");
   if (!user) throw new Error("User not found");
   if (!user.isActive) throw new Error("User is blocked.");
   if (!user.isEmailVerified) throw new Error("Email not verified.");
