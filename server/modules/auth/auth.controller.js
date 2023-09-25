@@ -18,34 +18,38 @@ const create = async (payload) => {
       "Password must be 8 characters long with at least one uppercase, lowercase and number"
     );
   rest.password = await bcrypt.hash(password, +process.env.SALT_ROUNDS);
+  await userModel.create(rest);
   const token = generateOTP();
   await authModel.create({ email: payload.email, token });
-  await mailer(payload.email, token);
-  return await userModel.create(rest);
+  const info = await mailer(payload.email, token);
+  return info;
 };
 
 const login = async (email, password) => {
-  const user = await userModel.findOne({ email }).select("+password");
+  const user = await userModel
+    .findOne({ email, isArchived: false })
+    .select("+password");
   if (!user) throw new Error("User not found");
-  if (!user.isActive) throw new Error("User is blocked.");
-  if (!user.isEmailVerified) throw new Error("Email not verified.");
+  if (!user.isActive) throw new Error("User is blocked. Please contact Admin");
+  if (!user.isEmailVerified)
+    throw new Error("Email is not verified. Verify email to get started");
   const isValid = await bcrypt.compare(password, user.password);
-  if (!isValid) throw new Error("Email or password invalid");
-  // JWT token generate
-  const payload = {email: user?.email, roles: user?.roles ?? []};
-  const token = generateJWT(payload)
-  return {token};
+  if (!isValid) throw new Error("Email or Password is invalid");
+  // JWT TOKEN GENERATION
+  const payload = { email: user?.email, roles: user?.roles };
+  const token = generateJWT(payload);
+  return { token };
 };
 
 const verifyEmail = async (emailP, tokenP) => {
   // check email exist
   const user = await authModel.findOne({ email: emailP });
   if (!user) throw new Error("User not found");
-  //  token validity
+  // check token Validity
   const isValidToken = verifyOTP(tokenP);
   if (!isValidToken) throw new Error("Token invalid");
   // token compare
-  const isValid = user.token === tokenP;
+  const isValid = user?.token === tokenP;
   if (!isValid) throw new Error("Token expired");
   // user isEmailVerified true
   await userModel.findOneAndUpdate(
@@ -58,13 +62,38 @@ const verifyEmail = async (emailP, tokenP) => {
   return true;
 };
 
-const regenerateToken = async (email) => {
+const regenerate = async (email) => {
+  // check email exist
   const user = await authModel.findOne({ email });
   if (!user) throw new Error("User not found");
   const token = generateOTP();
-  await authModel.create({ email }, { token }, {new:true});
-  await mailer(email, token)
+  await authModel.findOneAndUpdate({ email }, { token }, { new: true });
+  // send token to email
+  await mailer(email, token);
   return true;
 };
 
-module.exports = { create, login, verifyEmail, regenerateToken };
+const forgetPassword = async (email, token, password) => {
+  const user = await userModel.findOne({ email, isArchived: false });
+  if (!user) throw new Error("User not found");
+  if (!user.isActive) throw new Error("User is blocked. Please contact Admin");
+  if (!user.isEmailVerified)
+    throw new Error("Email is not verified. Verify email to get started");
+  const isValid = verifyOTP(token);
+  if (!isValid) throw new Error("Token invalid");
+  const hashedPw = await bcrypt.hash(password, +process.env.SALT_ROUNDS);
+  await userModel.findOneAndUpdate(
+    { email },
+    { password: hashedPw },
+    { new: true }
+  );
+  return true;
+};
+
+module.exports = {
+  create,
+  login,
+  forgetPassword,
+  verifyEmail,
+  regenerate,
+};
