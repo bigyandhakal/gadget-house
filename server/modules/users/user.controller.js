@@ -5,7 +5,46 @@ const create = (payload) => {
   return Model.create(payload);
 };
 const list = () => {
-  return Model.find();
+  return Model.aggregate([
+    {
+      $match: {},
+    },
+    {
+      $sort: {
+        created_at: 1,
+      },
+    },
+    {
+      $facet: {
+        metadata: [
+          {
+            $count: "total",
+          },
+        ],
+        data: [
+          {
+            $skip: (1 - 1) * 10,
+          },
+          {
+            $limit: 10,
+          },
+        ],
+      },
+    },
+    {
+      $addFields: {
+        total: {
+          $arrayElemAt: ["$metadata.total", 0],
+        },
+      },
+    },
+    {
+      $project: {
+        data: 1,
+        total: 1,
+      },
+    },
+  ]);
 };
 
 const getById = (id) => {
@@ -18,7 +57,7 @@ const updateProfile = (id, payload) => {
 
 const changePassword = async (id, payload) => {
   const { oldPassword, newPassword } = payload;
-  const user = await Model.findOne({ _id: id });
+  const user = await Model.findOne({ _id: id }).select("+password");
   if (!user) throw new Error("User not found");
   const isValid = await bcrypt.compare(oldPassword, user.password);
   if (!isValid) throw new Error("Password is invalid");
