@@ -1,26 +1,18 @@
 const bcrypt = require("bcrypt");
 
-const userModel = require("../users/user.model");
-const authModel = require("./auth.model");
 const { generateOTP, verifyOTP } = require("../../utils/otp");
+const authModel = require("./auth.model");
+const userModel = require("../users/user.model");
 const { mailer } = require("../../services/mail");
 const { generateJWT } = require("../../utils/jwt");
 
 const create = async (payload) => {
   const { password, roles, ...rest } = payload;
-  if (
-    password.length < 8 ||
-    !/[a-z]/.test(password) ||
-    !/[A-Z]/.test(password) ||
-    !/\d/.test(password)
-  )
-    throw new Error(
-      "Password must be 8 characters long with at least one uppercase, lowercase and number"
-    );
   rest.password = await bcrypt.hash(password, +process.env.SALT_ROUNDS);
   await userModel.create(rest);
   const token = generateOTP();
   await authModel.create({ email: payload.email, token });
+  // send token to email
   const info = await mailer(payload.email, token);
   return info;
 };
@@ -105,9 +97,9 @@ const forgetPassword = async (email, token, password) => {
 
 module.exports = {
   create,
-  login,
   forgetPassword,
-  verifyEmail,
-  regenerate,
   generateFPToken,
+  login,
+  regenerate,
+  verifyEmail,
 };

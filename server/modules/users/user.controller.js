@@ -4,14 +4,28 @@ const Model = require("./user.model");
 const create = (payload) => {
   return Model.create(payload);
 };
-const list = () => {
-  return Model.aggregate([
-    {
-      $match: {},
-    },
+
+const list = async (page = 1, limit = 10, search) => {
+  // return Model.find().skip(0).limit(5);
+  const query = [];
+  if (search?.name) {
+    query.push({
+      $match: {
+        name: new RegExp(search?.name, "gi"),
+      },
+    });
+  }
+  if (search?.role) {
+    query.push({
+      $match: {
+        roles: [search?.role],
+      },
+    });
+  }
+  query.push(
     {
       $sort: {
-        created_at: 1,
+        created_at: -1,
       },
     },
     {
@@ -23,10 +37,10 @@ const list = () => {
         ],
         data: [
           {
-            $skip: (1 - 1) * 10,
+            $skip: (+page - 1) * +limit,
           },
           {
-            $limit: 10,
+            $limit: +limit,
           },
         ],
       },
@@ -40,11 +54,23 @@ const list = () => {
     },
     {
       $project: {
-        data: 1,
         total: 1,
+        data: 1,
       },
     },
-  ]);
+    {
+      $project: {
+        "data.password": 0,
+      },
+    }
+  );
+  const result = await Model.aggregate(query);
+  return {
+    data: result[0].data,
+    total: result[0].total || 0,
+    page: +page,
+    limit: +limit,
+  };
 };
 
 const getById = (id) => {
@@ -85,12 +111,12 @@ const archive = async (id, payload) => {
 };
 
 module.exports = {
-  create,
-  list,
-  getById,
-  updateProfile,
-  changePassword,
-  resetPassword,
-  block,
   archive,
+  block,
+  changePassword,
+  create,
+  getById,
+  list,
+  resetPassword,
+  updateProfile,
 };
