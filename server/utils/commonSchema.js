@@ -2,6 +2,8 @@ const { Schema } = require("mongoose");
 const { ObjectId } = Schema.Types;
 
 module.exports = {
+  isActive: { type: Boolean, default: true },
+  
   isArchived: { type: Boolean, default: false },
 
   created_at: { type: String, default: Date.now() },
