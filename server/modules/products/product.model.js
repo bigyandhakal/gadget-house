@@ -4,14 +4,15 @@ const commonSchema = require("../../utils/commonSchema");
 const { ObjectId } = Schema.Types;
 
 const productSchema = new Schema({
-  category: { type: ObjectId, ref: "Category" },
   name: { type: String, required: true },
-  sku: { type: String },
-  details: { type: String },
+  brand: { type: String, required: true },
+  description: { type: String, required: true, maxLength: 250 },
+  sku: { type: String, required: true },
+  currency: { type: String, enum: ["USD", "NPR"], default: "NPR" },
+  price: { type: Number, required: true },
+  quantity: { type: Number, required: true },
   images: [{ type: String }],
-  brand: { type: String },
-  price: { type: String },
-  quantity: { type: String },
+  category: { type: ObjectId, ref: "Category" },
   ...commonSchema,
 });
 

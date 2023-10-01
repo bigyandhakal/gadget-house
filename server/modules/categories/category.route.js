@@ -22,7 +22,17 @@ router.post("/", async(req, res, next)=>{
     }
 })
 
-router.put("/", async(req, res, next)=>{
+router.get("/:id", async(req, res, next)=>{
+    try {
+        const {id} = req.params;
+        const result = await Controller.getById(id, req.body)
+        return res.json({data: result, msg:"success"})
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.put("/:id", async(req, res, next)=>{
     try {
         const {id} = req.params;
         const result = await Controller.updateById(id, req.body)
@@ -32,4 +42,13 @@ router.put("/", async(req, res, next)=>{
     }
 })
 
+router.delete("/:id", async(req, res, next)=>{
+    try {
+        const {id} = req.params;
+        const result = await Controller.removeById(id)
+        return res.json({data:result, msg:"success"})
+    } catch (error) {
+        next(error)
+    }
+})
 module.exports = router;
