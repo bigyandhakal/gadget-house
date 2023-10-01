@@ -1,4 +1,4 @@
-const Model = require("./product.model")
+const Model = require("./product.model");
 
 const create = async (payload) => {
   return Model.create(payload);
