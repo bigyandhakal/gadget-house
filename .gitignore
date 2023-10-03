@@ -133,4 +133,12 @@ dist
 # Playground
 playground
 
-public
+# public
+
+/server/public/products/*
+/server/public/users/*
+
+
+# !exception to the rules
+!/server/public/products/.gitkeep
+!/server/public/users/.gitkeep
