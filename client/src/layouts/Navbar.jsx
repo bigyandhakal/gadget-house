@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import {FaShoppingCart} from "react-icons/fa";
-import Button from "react-bootstrap/Button";
-import Badge from 'react-bootstrap/Badge';
+import { BiLogIn } from "react-icons/bi";
+import {Button, Badge, Stack} from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
@@ -53,10 +53,22 @@ const NavBar = () => {
             />
             <Button variant="outline-success">Search</Button>
           </Form>
-          <Button variant="secondary">
-            <FaShoppingCart />
-            <Badge bg="info">9</Badge>
-          </Button>
+          <div className="p-1">
+            <Stack gap={1} direction="horizontal">
+              <Link to={"/cart"}>
+                <a className="btn btn-outline-secondary">
+                  <FaShoppingCart />
+                  &nbsp;
+                  <Badge bg="primary">0</Badge>
+                </a>
+              </Link>
+              <Link to={"/login"}>
+                <a className="btn btn-outline-secondary">
+                  <BiLogIn size={24} />
+                </a>
+              </Link>
+            </Stack>
+          </div>
         </Navbar.Collapse>
       </Container>
     </Navbar>
