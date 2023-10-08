@@ -1,18 +1,22 @@
 import { Link } from "react-router-dom";
-import {FaShoppingCart} from "react-icons/fa";
+import { Badge, Button, Stack } from "react-bootstrap";
+
+import { FaShoppingCart } from "react-icons/fa";
 import { BiLogIn } from "react-icons/bi";
-import {Button, Badge, Stack} from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 
-const NavBar = () => {
+import { useSelector } from "react-redux";
+
+function NavBar() {
+  const { quantity } = useSelector((state) => state.cart);
   return (
-    <Navbar expand="lg" className="bg-body-tertiary">
+    <Navbar fixed="top" expand="lg" className="bg-body-tertiary">
       <Container fluid>
         <Navbar.Brand>
-          <Link to={"/"} className="text-decoration-none text-dark">
+          <Link to={"/"} className="text-dark text-decoration-none">
             Gadget House
           </Link>
         </Navbar.Brand>
@@ -23,26 +27,24 @@ const NavBar = () => {
             style={{ maxHeight: "100px" }}
             navbarScroll
           >
-            <Nav.Link>
-              <Link to={"/"} className="text-decoration-none text-dark">
-                Home
-              </Link>
-            </Nav.Link>
-            <Nav.Link>
-              <Link to={"/products"} className="text-decoration-none text-dark">
-                Product
-              </Link>
-            </Nav.Link>
-            <Nav.Link>
-              <Link to={"/about"} className="text-decoration-none text-dark">
-                About
-              </Link>
-            </Nav.Link>
-            <Nav.Link>
-              <Link to={"/contact"} className="text-decoration-none text-dark">
-                Contact
-              </Link>
-            </Nav.Link>
+            <Link
+              to={"/products"}
+              className="nav-link text-dark text-decoration-none"
+            >
+              Products
+            </Link>
+            <Link
+              to={"/about"}
+              className="nav-link text-dark text-decoration-none"
+            >
+              About
+            </Link>
+            <Link
+              to={"/contact"}
+              className="nav-link text-dark text-decoration-none"
+            >
+              Contact
+            </Link>
           </Nav>
           <Form className="d-flex">
             <Form.Control
@@ -55,17 +57,13 @@ const NavBar = () => {
           </Form>
           <div className="p-1">
             <Stack gap={1} direction="horizontal">
-              <Link to={"/cart"}>
-                <a className="btn btn-outline-secondary">
-                  <FaShoppingCart />
-                  &nbsp;
-                  <Badge bg="primary">0</Badge>
-                </a>
+              <Link to={"/cart"} className="btn btn-outline-secondary">
+                <FaShoppingCart />
+                &nbsp;
+                <Badge bg="primary">{quantity}</Badge>
               </Link>
-              <Link to={"/login"}>
-                <a className="btn btn-outline-secondary">
-                  <BiLogIn size={24} />
-                </a>
+              <Link to={"/login"} className="btn btn-outline-secondary">
+                <BiLogIn size={24} />
               </Link>
             </Stack>
           </div>
@@ -73,6 +71,6 @@ const NavBar = () => {
       </Container>
     </Navbar>
   );
-};
+}
 
 export default NavBar;

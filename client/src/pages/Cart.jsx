@@ -1,24 +1,47 @@
+import { Link } from "react-router-dom";
 import { Image } from "react-bootstrap";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { BsArrowLeftSquare } from "react-icons/bs";
 
 import { useDispatch, useSelector } from "react-redux";
-import { removeItem } from "../slices/cartSlice";
-import {Link} from "react-router-dom"
+import {
+  decreaseQuantity,
+  increaseQuantity,
+  removeItem,
+} from "../slices/cartSlice";
 
 const Cart = () => {
   const dispatch = useDispatch();
   const { cart } = useSelector((state) => state.cart);
+
+  const totalAmount = () => {
+    return cart.reduce((acc, obj) => acc + obj.quantity * obj.price, 0);
+  };
+
+  const increase = (id) => {
+    if (id) dispatch(increaseQuantity(id));
+  };
+
+  const decrease = (id) => {
+    if (id) dispatch(decreaseQuantity(id));
+  };
 
   const removeFromCart = (id) => {
     if (id) {
       dispatch(removeItem(id));
     }
   };
+
   return (
     <>
       {cart.length > 0 ? (
-        <FullCart items={cart} removeFromCart={removeFromCart} />
+        <FullCart
+          items={cart}
+          decrease={decrease}
+          increase={increase}
+          removeFromCart={removeFromCart}
+          totalAmount={totalAmount}
+        />
       ) : (
         <EmptyCart />
       )}
@@ -29,10 +52,10 @@ const Cart = () => {
 const EmptyCart = () => {
   return (
     <>
-      <div className="m-5 bg-body-tertiary rounded-3 text-center">
+      <div className="m-4 bg-body-tertiary rounded-3 text-center">
         <div className="container-fluid py-5">
           <h1 className="display-5 fw-bold">Your cart is empty</h1>
-          <Link className="btn btn-light btn-lg" to={"/products"}>
+          <Link to="/products" className="btn btn-light btn-lg">
             <BsArrowLeftSquare />
             &nbsp;Continue Shopping
           </Link>
@@ -42,7 +65,13 @@ const EmptyCart = () => {
   );
 };
 
-const FullCart = ({ items, removeFromCart }) => {
+const FullCart = ({
+  decrease,
+  increase,
+  items,
+  removeFromCart,
+  totalAmount,
+}) => {
   return (
     <>
       <h1 className="text-center m-5">Your Cart</h1>
@@ -80,6 +109,7 @@ const FullCart = ({ items, removeFromCart }) => {
                       <span
                         className="btn btn-primary"
                         style={{ margin: "2px" }}
+                        onClick={() => decrease(item?.id)}
                       >
                         -
                       </span>
@@ -87,13 +117,14 @@ const FullCart = ({ items, removeFromCart }) => {
                       <span
                         className="btn btn-primary"
                         style={{ margin: "2px" }}
+                        onClick={() => increase(item?.id)}
                       >
                         +
                       </span>
                     </td>
                     <td>{Number(item?.price) * Number(item?.quantity)}</td>
                     <td>
-                      <AiFillCloseCircle
+                      <AiFillCloseCircle style={{cursor:"pointer"}}
                         color="red"
                         size={24}
                         onClick={() => {
@@ -106,7 +137,7 @@ const FullCart = ({ items, removeFromCart }) => {
               })}
               <tr>
                 <td colSpan="5">Total Carts</td>
-                <td>Total Amount</td>
+                <td>Total Amount: {totalAmount()}</td>
               </tr>
             </tbody>
           </table>
