@@ -11,6 +11,18 @@ import NavBar from "./layouts/Navbar";
 import Footer from "./layouts/Footer";
 import ProductDetail from "./pages/ProductDetail";
 
+import Dashboard from "./pages/admin/Products";
+import AdminProducts from "./pages/admin/Products";
+
+import { PrivateRoute } from "./components/Routes";
+
+const adminRoutes = [
+  { path: "/dashboard", component: <Dashboard />, role: "admin" },
+  { path: "/products", component: <AdminProducts />, role: "admin" },
+  { path: "/orders", component: <AdminProducts />, role: "admin" },
+  { path: "/users", component: <AdminProducts />, role: "admin" },
+];
+
 export default function App() {
   return (
     <>
@@ -26,6 +38,21 @@ export default function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/cart" element={<Cart />} />
+                {adminRoutes
+                  ? adminRoutes.map((route, index) => {
+                      return (
+                        <Route
+                          key={index}
+                          path={`/admin${route?.path}`}
+                          element={
+                            <PrivateRoute role={route?.role ?? ""}>
+                              {route?.component}
+                            </PrivateRoute>
+                          }
+                        />
+                      );
+                    })
+                  : null}
                 <Route path="*" element={<Error />} />
               </Routes>
             </div>
