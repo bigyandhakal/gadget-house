@@ -1,16 +1,18 @@
 import React from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Cart from "./pages/Cart";
-import Error from "./pages/Error";
-import Home from "./pages/Home";
-import Products from "./pages/Products";
 import About from "./pages/About";
+import Cart from "./pages/Cart";
+import { CheckoutPage } from "./components/CheckoutStatus";
+import Checkout from "./pages/Checkout";
 import Contact from "./pages/Contact";
-import NavBar from "./layouts/Navbar";
+import Error from "./pages/Error";
 import Footer from "./layouts/Footer";
+import Home from "./pages/Home";
+import NavBar from "./layouts/Navbar";
+import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
-
+// Admin Routes
 import Dashboard from "./pages/admin/Products";
 import AdminProducts from "./pages/admin/Products";
 
@@ -38,6 +40,16 @@ export default function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route
+                  path="/checkout/failed"
+                  element={<CheckoutPage
+                    type="failed"
+                    msgHeader="Transaction Failed"
+                    msg="Something went wrong. Try again."
+                  />}
+                />
+                <Route path="/checkout/success" element={<CheckoutPage />} />
                 {adminRoutes
                   ? adminRoutes.map((route, index) => {
                       return (

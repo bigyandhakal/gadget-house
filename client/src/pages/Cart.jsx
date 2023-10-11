@@ -92,15 +92,16 @@ const FullCart = ({
               {items.map((item, index) => {
                 return (
                   <tr key={index}>
-                    <td>{item?.name}</td>
+                    <td>
+                      {item?.title.length > 75
+                        ? item?.title.substring(0, 75).concat("...")
+                        : item?.title}
+                    </td>
                     <td>
                       <Image
                         width={40}
                         height={40}
-                        src={
-                          item?.image ||
-                          "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/2048px-No_image_available.svg.png"
-                        }
+                        src={item?.image}
                         thumbnail
                       />
                     </td>
@@ -124,7 +125,7 @@ const FullCart = ({
                     </td>
                     <td>{Number(item?.price) * Number(item?.quantity)}</td>
                     <td>
-                      <AiFillCloseCircle style={{cursor:"pointer"}}
+                      <AiFillCloseCircle
                         color="red"
                         size={24}
                         onClick={() => {
@@ -137,7 +138,15 @@ const FullCart = ({
               })}
               <tr>
                 <td colSpan="5">Total Carts</td>
-                <td>Total Amount: {totalAmount()}</td>
+                <td>{totalAmount()}</td>
+              </tr>
+              <tr>
+                <td colSpan="5">
+                  <Link to="/products">Continue Shopping</Link>
+                </td>
+                <td>
+                  <Link to="/checkout">Check out Now</Link>
+                </td>
               </tr>
             </tbody>
           </table>
