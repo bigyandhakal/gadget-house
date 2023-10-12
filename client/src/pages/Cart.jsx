@@ -131,6 +131,7 @@ const FullCart = ({
                         onClick={() => {
                           removeFromCart(item?.id);
                         }}
+                        style={{cursor:"pointer"}}
                       />
                     </td>
                   </tr>

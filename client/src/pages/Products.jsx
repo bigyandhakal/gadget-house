@@ -2,7 +2,7 @@ import "./Product.css";
 import { useCallback, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
+import {BsFillEyeFill, BsFillCartCheckFill} from "react-icons/bs";
 import { addToCart } from "../slices/cartSlice";
 import { fetchProducts } from "../slices/productSlice";
 import SkeletalLoading from "../components/SkeletalLoading";
@@ -75,7 +75,7 @@ const Products = () => {
                               className="btn"
                               to={`/products/${product?.id}`}
                             >
-                              <i className="fa fa-eye"></i>
+                              <BsFillEyeFill/>
                             </Link>
                             <button
                               className="btn"
@@ -83,7 +83,7 @@ const Products = () => {
                                 dispatch(addToCart(product));
                               }}
                             >
-                              <i className="fa fa-shopping-cart"></i>
+                              <BsFillCartCheckFill/>
                             </button>
                           </div>
                         </div>
