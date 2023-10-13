@@ -1,9 +1,8 @@
 const { Schema, model } = require("mongoose");
+const { ObjectId } = Schema.Types;
 const commonSchema = require("../../utils/commonSchema");
 
-const { ObjectId } = Schema.Types;
-
-const productSchema = new Schema({
+const ProductSchema = new Schema({
   name: { type: String, required: true },
   brand: { type: String, required: true },
   description: { type: String, required: true, maxLength: 250 },
@@ -12,8 +11,8 @@ const productSchema = new Schema({
   price: { type: Number, required: true },
   quantity: { type: Number, required: true },
   images: [{ type: String }],
-  category: { type: ObjectId, ref: "Category" },
+  category: { type: ObjectId, ref: "Category", required: true },
   ...commonSchema,
 });
 
-module.exports = model("Product", productSchema);
+module.exports = model("Product", ProductSchema);
