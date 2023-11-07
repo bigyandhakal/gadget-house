@@ -12,6 +12,7 @@ import Home from "./pages/Home";
 import NavBar from "./layouts/Navbar";
 import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
+
 // Admin Routes
 import Dashboard from "./pages/admin/Products";
 import AdminProducts from "./pages/admin/Products";
