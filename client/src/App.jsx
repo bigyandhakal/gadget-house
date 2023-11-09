@@ -47,7 +47,7 @@ export default function App() {
                   element={<CheckoutPage
                     type="failed"
                     msgHeader="Transaction Failed"
-                    msg="Something went wrong."
+                    msg="Something went wrong. Try again"
                   />}
                 />
                 <Route path="/checkout/success" element={<CheckoutPage />} />
