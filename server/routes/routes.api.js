@@ -6,7 +6,7 @@ const productRouter = require("../modules/products/product.route")
 const orderRouter = require("../modules/orders/order.route")
 
 router.get("/", ({ req, res, next }) => {
-  res.json({ data: "", msg: "API working" });
+  res.json({ data: "", msg: "API is working" });
 });
 
 router.use("/auth", authRouter)
