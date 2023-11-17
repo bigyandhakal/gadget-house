@@ -18,7 +18,7 @@ export const CheckoutPage = ({
         </h1>
         <p>
           {msg ??
-            "We received your purchase request. We will be in touch!!"}
+            "We received your purchase request. We will be in touch shortly!"}
         </p>
       </div>
     </div>
