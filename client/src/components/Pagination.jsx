@@ -10,6 +10,7 @@ function Paginate() {
       <Pagination.Item>{3}</Pagination.Item>
       <Pagination.Item>{4}</Pagination.Item>
       <Pagination.Item>{5}</Pagination.Item>
+      <Pagination.Item>{6}</Pagination.Item>
       <Pagination.Next />
       <Pagination.Last />
     </Pagination>
